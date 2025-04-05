@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SR Alumni Association Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-actions a {
+            color: white;
+            margin-left: 1rem;
+            text-decoration: none;
+        }
+        
+        .user-actions .btn {
+            background-color: var(--secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+            font-weight: bold;
+        }
+        
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h3 {
+            color: var(--primary);
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: var(--dark);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            display: block;
+        }
+        
+        .nav-links li a:hover {
+            background-color: var(--secondary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li a {
+            display: block;
+            padding: 0.75rem 0;
+            color: var(--dark);
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-menu li a:hover {
+            color: var(--secondary);
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Dashboard Content */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-header h3 {
+            color: var(--primary);
+        }
+        
+        .card-header a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        /* Stats Card */
+        .stats-card {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin: 0.5rem 0;
+        }
+        
+        .stats-label {
+            color: #777;
+        }
+        
+        /* Events List */
+        .event-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .event-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .event-date {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .event-title {
+            font-weight: 500;
+            margin: 0.25rem 0;
+        }
+        
+        .event-location {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        /* Success Stories */
+        .story-item {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+        
+        .story-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        
+        .story-content h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .story-content p {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            background-color: var(--light);
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .action-btn i {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* System Architecture Section */
+        .architecture {
+            margin-top: 3rem;
+        }
+        
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .architecture-card {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .architecture-card h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .architecture-card ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+        }
+        
+        .architecture-card li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .tech-tag {
+            display: inline-block;
+            background-color: var(--light);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .frontend { background-color: #e3f2fd; color: #1976d2; }
+        .backend { background-color: #e8f5e9; color: #388e3c; }
+        .database { background-color: #fff3e0; color: #fb8c00; }
+        .security { background-color: #ffebee; color: #d32f2f; }
+        .cloud { background-color: #f3e5f5; color: #8e24aa; }
+        .integration { background-color: #e0f7fa; color: #00acc1; }
+        
+        /* Alumni Directory Styles */
+        .alumni-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .alumni-card {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .alumni-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 0.5rem;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #777;
+        }
+        
+        .alumni-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .alumni-batch {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+        
+        .alumni-connect {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        /* Jobs List Styles */
+        .jobs-list {
+            margin-top: 1rem;
+        }
+        
+        .job-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .job-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .job-company {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 0.25rem;
+        }
+        
+        .job-salary {
+            font-size: 0.9rem;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .job-apply {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        
+        /* Donation Modal */
+        .donation-modal {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .donation-options {
+            margin: 1.5rem 0;
+        }
+        
+        .donation-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .donation-option:hover {
+            border-color: var(--secondary);
+            background-color: #f5f9ff;
+        }
+        
+        .donation-option i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: var(--secondary);
+        }
+        
+        .upi-details {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+        
+        /* Events Modal */
+        .events-modal {
+            padding: 1rem;
+        }
+        
+        .events-list {
+            margin-top: 1rem;
+        }
+        
+        /* Stories Modal */
+        .stories-modal {
+            padding: 1rem;
+        }
+        
+        .stories-list {
+            margin-top: 1rem;
+        }
+        
+        /* Connect Modal */
+        .connect-modal {
+            padding: 1rem;
+        }
+        
+        .linkedin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .linkedin-profile {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .linkedin-profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+        }
+        
+        .linkedin-profile h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .linkedin-profile p {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+        
+        .linkedin-btn {
+            background-color: #0077b5;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+        .linkedin-btn i {
+            margin-right: 0.25rem;
+        }
+        
+        /* Post Job Modal */
+        .post-job-modal {
+            padding: 1rem;
+        }
+        
+        .job-links {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .job-link {
+            display: block;
+            padding: 1rem;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .job-link:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .job-link i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Create Event Modal */
+        .create-event-modal {
+            padding: 1rem;
+        }
+        
+        .college-events {
+            margin-top: 1rem;
+        }
+        
+        .college-event {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 1rem 0;
+        }
+        
+        .footer-links li a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            background-color: var(--primary);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.5rem 0;
+        }
+        
+        .mobile-nav-links {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+        
+        .mobile-nav-links li a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+        
+        .mobile-nav-links li a i {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-container {
+            background-color: white;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .modal-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-nav {
+                display: block;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">SR <span>Alumni</span></div>
+            
+            <div class="user-actions">
+                <a href="#"><i class="fas fa-bell"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+                <a href="#" class="btn" id="profileBtn">Profile</a>
+                <div class="profile-circle" id="profileInitial">?</div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Login to Your Account</h3>
+                <span class="close-btn" id="closeModal">&times;</span>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" id="networkLink"><i class="fas fa-users"></i> Network</a></li>
+                <li><a href="#" id="jobsLink"><i class="fas fa-briefcase"></i> Jobs</a></li>
+                <li><a href="#" id="donateLink"><i class="fas fa-hand-holding-usd"></i> Donate</a></li>
+                <li><a href="#" id="eventsLink"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                <li><a href="#" id="storiesLink"><i class="fas fa-graduation-cap"></i> Stories</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-user"></i> My Profile</a></li>
+                <li><a href="#" id="alumniDirectoryLink"><i class="fas fa-users"></i> Alumni Directory</a></li>
+                <li><a href="#" id="jobPortalLink"><i class="fas fa-briefcase"></i> Job Portal</a></li>
+                <li><a href="#" id="donationPortalLink"><i class="fas fa-hand-holding-usd"></i> Donation Portal</a></li>
+                <li><a href="#" id="eventsPortalLink"><i class="fas fa-calendar-alt"></i> Events & Reunions</a></li>
+                <li><a href="#" id="storiesPortalLink"><i class="fas fa-star"></i> Success Stories</a></li>
+                <li><a href="#"><i class="fas fa-comments"></i> Discussion Forums</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Dashboard Content -->
+        <main>
+            <div class="dashboard-content">
+                <!-- Welcome Card -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3 id="welcomeMessage">Welcome!</h3>
+                    </div>
+                    <p>Stay connected with your alma mater and fellow alumni. Update your profile to get the most out of the platform.</p>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="card stats-card" id="alumniNetworkCard">
+                    <div class="card-header">
+                        <h3>Alumni Network</h3>
+                    </div>
+                    <div class="stats-number">8,752</div>
+                    <div class="stats-label">Registered Alumni</div>
+                </div>
+                
+                <div class="card stats-card" id="donationsCard">
+                    <div class="card-header">
+                        <h3>Donations</h3>
+                    </div>
+                    <div class="stats-number">₹25.7L</div>
+                    <div class="stats-label">Raised this year</div>
+                </div>
+                
+                <div class="card stats-card" id="jobsPostedCard">
+                    <div class="card-header">
+                        <h3>Jobs Posted</h3>
+                    </div>
+                    <div class="stats-number">124</div>
+                    <div class="stats-label">Opportunities</div>
+                </div>
+                
+                <!-- Upcoming Events -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Upcoming Events</h3>
+                        <a href="#" id="viewAllEvents">View All</a>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">June 15, 2023</div>
+                        <h4 class="event-title">Annual Alumni Meet</h4>
+                        <div class="event-location">University Campus</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">July 5, 2023</div>
+                        <h4 class="event-title">Tech Talk: AI Trends</h4>
+                        <div class="event-location">Virtual Event</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">August 20, 2023</div>
+                        <h4 class="event-title">Batch of 2015 Reunion</h4>
+                        <div class="event-location">Grand Hotel, Delhi</div>
+                    </div>
+                </div>
+                
+                <!-- Success Stories -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Alumni Success Stories</h3>
+                        <a href="#" id="viewAllStories">View All</a>
+                    </div>
+                    <div class="story-item">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80" alt="Alumni" class="story-image">
+                        <div class="story-content">
+                            <h4>Dr. Rajesh Verma</h4>
+                            <p>Founded a healthcare startup that raised ₹50 crore in Series A funding.</p>
+                        </div>
+                    </div>
+                    <div class="story-item">
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80" alt="Alumni" class="story-image">
+                        <div class="story-content">
+                            <h4>Priya Patel</h4>
+                            <p>Named among Top 50 Women in Tech by Forbes India.</p>
+                        </div>
+                    </div>
+                    <div class="story-item">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80" alt="Alumni" class="story-image">
+                        <div class="story-content">
+                            <h4>Ananya Sharma</h4>
+                            <p>Became youngest partner at McKinsey India at age 32.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="action-btn" id="connectBtn">
+                            <i class="fas fa-user-plus"></i>
+                            Connect
+                        </button>
+                        <button class="action-btn" id="postJobBtn">
+                            <i class="fas fa-briefcase"></i>
+                            Post Job
+                        </button>
+                        <button class="action-btn" id="donateBtn">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            Donate
+                        </button>
+                        <button class="action-btn" id="createEventBtn">
+                            <i class="fas fa-calendar-plus"></i>
+                            Create Event
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- System Architecture Section -->
+                <div class="card architecture" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <h3>System Architecture</h3>
+                    </div>
+                    <p>Our platform is built on a modern, scalable architecture with multiple layers:</p>
+                    
+                    <div class="architecture-grid">
+                        <div class="architecture-card">
+                            <h4>Frontend (Client Layer)</h4>
+                            <ul>
+                                <li>Web: React/Angular</li>
+                                <li>Mobile: Flutter/React Native</li>
+                                <li>Responsive Design</li>
+                                <li>Progressive Web App</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <span class="tech-tag frontend">React</span>
+                                <span class="tech-tag frontend">Angular</span>
+                                <span class="tech-tag frontend">Flutter</span>
+                                <span class="tech-tag frontend">React Native</span>
+                            </div>
+                        </div>
+                        
+                        <div class="architecture-card">
+                            <h4>Backend (Server Layer)</h4>
+                            <ul>
+                                <li>API Gateway (Node.js/Spring Boot)</li>
+                                <li>Microservices Architecture</li>
+                                <li>User Management</li>
+                                <li>Donations</li>
+                                <li>Networking</li>
+                                <li>Job Portal</li>
+                                <li>Event Management</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <span class="tech-tag backend">Node.js</span>
+                                <span class="tech-tag backend">Spring Boot</span>
+                                <span class="tech-tag backend">Microservices</span>
+                            </div>
+                        </div>
+                        
+                        <div class="architecture-card">
+                            <h4>Database Layer</h4>
+                            <ul>
+                                <li>Relational (SQL): PostgreSQL/MySQL</li>
+                                <li>NoSQL: MongoDB</li>
+                                <li>Caching: Redis</li>
+                                <li>Search: Elasticsearch</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <span class="tech-tag database">PostgreSQL</span>
+                                <span class="tech-tag database">MySQL</span>
+                                <span class="tech-tag database">MongoDB</span>
+                                <span class="tech-tag database">Redis</span>
+                            </div>
+                        </div>
+                        
+                        <div class="architecture-card">
+                            <h4>Security Layer</h4>
+                            <ul>
+                                <li>JWT Authentication</li>
+                                <li>Data Encryption</li>
+                                <li>Two-Factor Authentication</li>
+                                <li>Role-Based Access Control</li>
+                                <li>Regular Security Audits</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <span class="tech-tag security">JWT</span>
+                                <span class="tech-tag security">2FA</span>
+                                <span class="tech-tag security">RBAC</span>
+                                <span class="tech-tag security">AES-256</span>
+                            </div>
+                        </div>
+                        
+                        <div class="architecture-card">
+                            <h4>Cloud Hosting</h4>
+                            <ul>
+                                <li>AWS/Google Cloud</li>
+                                <li>Auto-scaling</li>
+                                <li>Load Balancing</li>
+                                <li>CDN Integration</li>
+                                <li>99.9% Uptime SLA</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <span class="tech-tag cloud">AWS</span>
+                                <span class="tech-tag cloud">Google Cloud</span>
+                                <span class="tech-tag cloud">Kubernetes</span>
+                                <span class="tech-tag cloud">Docker</span>
+                            </div>
+                        </div>
+                        
+                        <div class="architecture-card">
+                            <h4>Integrations</h4>
+                            <ul>
+                                <li>Payment Gateways (Stripe/Razorpay)</li>
+                                <li>Email Notifications</li>
+                                <li>SMS Gateway</li>
+                                <li>Social Media Integration</li>
+                                <li>Calendar Integration</li>
+                            </ul>
+                            <div style="margin-top: 1rem;">
+                                <span class="tech-tag integration">Razorpay</span>
+                                <span class="tech-tag integration">Stripe</span>
+                                <span class="tech-tag integration">Twilio</span>
+                                <span class="tech-tag integration">SendGrid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <h3>SR University Alumni Association</h3>
+            <ul class="footer-links">
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms</a></li>
+            </ul>
+            <p>&copy; 2023 SR Alumni. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" id="mobileNetworkLink"><i class="fas fa-network-wired"></i> Network</a></li>
+            <li><a href="#" id="mobileJobsLink"><i class="fas fa-briefcase"></i> Jobs</a></li>
+            <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+    </nav>
+
+    <!-- Alumni Directory Modal -->
+    <div class="modal-overlay" id="alumniModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeAlumniModal">&times;</span>
+            <h2 class="modal-title">Alumni Directory</h2>
+            <div class="alumni-grid" id="alumniDirectory">
+                <!-- Alumni cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Jobs Modal -->
+    <div class="modal-overlay" id="jobsModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeJobsModal">&times;</span>
+            <h2 class="modal-title">Job Opportunities</h2>
+            <div class="jobs-list" id="jobsList">
+                <!-- Job items will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Modal -->
+    <div class="modal-overlay" id="donationModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeDonationModal">&times;</span>
+            <h2 class="modal-title">Support Your Alma Mater</h2>
+            <div class="donation-modal">
+                <p>Your contributions help support current students and improve campus facilities.</p>
+                <div class="donation-options">
+                    <div class="donation-option" id="upiOption">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div>
+                            <h4>UPI Payment</h4>
+                            <p>Instant transfer using any UPI app</p>
+                        </div>
+                    </div>
+                    <div class="donation-option" id="netBankingOption">
+                        <i class="fas fa-university"></i>
+                        <div>
+                            <h4>Net Banking</h4>
+                            <p>Transfer directly from your bank</p>
+                        </div>
+                    </div>
+                    <div class="donation-option" id="cardOption">
+                        <i class="fas fa-credit-card"></i>
+                        <div>
+                            <h4>Credit/Debit Card</h4>
+                            <p>Secure payment via cards</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="upiDetails" style="display: none;">
+                    <h4>Send your contribution via UPI</h4>
+                    <div class="upi-details">
+                        <p>UPI ID: sralumni@icici</p>
+                        <p>Phone Number: +91 9876543210</p>
+                    </div>
+                    <p>Scan this QR code with any UPI app:</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=sralumni@icici&pn=SR%20Alumni%20Association&am=&cu=INR" alt="UPI QR Code" style="width: 150px; height: 150px; margin: 1rem auto; display: block;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Modal -->
+    <div class="modal-overlay" id="eventsModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeEventsModal">&times;</span>
+            <h2 class="modal-title">Upcoming Events</h2>
+            <div class="events-modal">
+                <div class="events-list" id="eventsList">
+                    <!-- Event items will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stories Modal -->
+    <div class="modal-overlay" id="storiesModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeStoriesModal">&times;</span>
+            <h2 class="modal-title">Alumni Success Stories</h2>
+            <div class="stories-modal">
+                <div class="stories-list" id="storiesList">
+                    <!-- Story items will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connect Modal -->
+    <div class="modal-overlay" id="connectModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeConnectModal">&times;</span>
+            <h2 class="modal-title">Connect with Alumni</h2>
+            <div class="connect-modal">
+                <p>Connect with these alumni on LinkedIn:</p>
+                <div class="linkedin-grid" id="linkedinProfiles">
+                    <!-- LinkedIn profiles will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Job Modal -->
+    <div class="modal-overlay" id="postJobModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closePostJobModal">&times;</span>
+            <h2 class="modal-title">Post Job Opportunities</h2>
+            <div class="post-job-modal">
+                <p>Post your job openings on these platforms:</p>
+                <div class="job-links">
+                    <a href="https://www.linkedin.com/jobs/" class="job-link" target="_blank">
+                        <i class="fab fa-linkedin"></i> LinkedIn Jobs
+                    </a>
+                    <a href="https://www.naukri.com/" class="job-link" target="_blank">
+                        <i class="fas fa-briefcase"></i> Naukri.com
+                    </a>
+                    <a href="https://www.indeed.com/" class="job-link" target="_blank">
+                        <i class="fas fa-search"></i> Indeed
+                    </a>
+                    <a href="https://www.monsterindia.com/" class="job-link" target="_blank">
+                        <i class="fas fa-user-tie"></i> Monster India
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div class="modal-overlay" id="createEventModal">
+        <div class="modal-container">
+            <span class="close-modal" id="closeCreateEventModal">&times;</span>
+            <h2 class="modal-title">Create Alumni Event</h2>
+            <div class="create-event-modal">
+                <p>Here are some college events you can join or get inspiration from:</p>
+                <div class="college-events" id="collegeEvents">
+                    <!-- College events will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const profileBtn = document.getElementById('profileBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const loginForm = document.getElementById('loginForm');
+        const profileInitial = document.getElementById('profileInitial');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+
+        // Modal elements
+        const alumniModal = document.getElementById('alumniModal');
+        const closeAlumniModal = document.getElementById('closeAlumniModal');
+        const alumniDirectory = document.getElementById('alumniDirectory');
+        const alumniNetworkCard = document.getElementById('alumniNetworkCard');
+        const alumniDirectoryLink = document.getElementById('alumniDirectoryLink');
+        const networkLink = document.getElementById('networkLink');
+        const mobileNetworkLink = document.getElementById('mobileNetworkLink');
+
+        const jobsModal = document.getElementById('jobsModal');
+        const closeJobsModal = document.getElementById('closeJobsModal');
+        const jobsList = document.getElementById('jobsList');
+        const jobsPostedCard = document.getElementById('jobsPostedCard');
+        const jobsLink = document.getElementById('jobsLink');
+        const jobPortalLink = document.getElementById('jobPortalLink');
+        const mobileJobsLink = document.getElementById('mobileJobsLink');
+
+        const donationModal = document.getElementById('donationModal');
+        const closeDonationModal = document.getElementById('closeDonationModal');
+        const upiOption = document.getElementById('upiOption');
+        const upiDetails = document.getElementById('upiDetails');
+        const donationsCard = document.getElementById('donationsCard');
+        const donateLink = document.getElementById('donateLink');
+        const donationPortalLink = document.getElementById('donationPortalLink');
+        const donateBtn = document.getElementById('donateBtn');
+
+        const eventsModal = document.getElementById('eventsModal');
+        const closeEventsModal = document.getElementById('closeEventsModal');
+        const eventsList = document.getElementById('eventsList');
+        const viewAllEvents = document.getElementById('viewAllEvents');
+        const eventsLink = document.getElementById('eventsLink');
+        const eventsPortalLink = document.getElementById('eventsPortalLink');
+        const createEventBtn = document.getElementById('createEventBtn');
+
+        const storiesModal = document.getElementById('storiesModal');
+        const closeStoriesModal = document.getElementById('closeStoriesModal');
+        const storiesList = document.getElementById('storiesList');
+        const viewAllStories = document.getElementById('viewAllStories');
+        const storiesLink = document.getElementById('storiesLink');
+        const storiesPortalLink = document.getElementById('storiesPortalLink');
+
+        const connectModal = document.getElementById('connectModal');
+        const closeConnectModal = document.getElementById('closeConnectModal');
+        const linkedinProfiles = document.getElementById('linkedinProfiles');
+        const connectBtn = document.getElementById('connectBtn');
+
+        const postJobModal = document.getElementById('postJobModal');
+        const closePostJobModal = document.getElementById('closePostJobModal');
+        const postJobBtn = document.getElementById('postJobBtn');
+
+        const createEventModal = document.getElementById('createEventModal');
+        const closeCreateEventModal = document.getElementById('closeCreateEventModal');
+        const collegeEvents = document.getElementById('collegeEvents');
+
+        // Show modal when profile is clicked
+        profileBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+
+        // Close modal when X is clicked
+        closeModal.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+
+        // Handle form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if (email && password) {
+                // Extract first letter from email (or name if you had a name field)
+                const nameFromEmail = email.split('@')[0];
+                const firstLetter = nameFromEmail.charAt(0).toUpperCase();
+                
+                // Update profile circle
+                profileInitial.textContent = firstLetter;
+                
+                // Update welcome message
+                welcomeMessage.textContent = `Welcome back, ${nameFromEmail}!`;
+                
+                // Close modal
+                loginModal.style.display = 'none';
+            } else {
+                alert('Please enter both email and password');
+            }
+        });
+
+        // Alumni Directory Data
+        const alumniData = [
+            { name: "Rahul Sharma", batch: "2015", gender: "male" },
+            { name: "Priya Patel", batch: "2017", gender: "female" },
+            { name: "Amit Singh", batch: "2012", gender: "male" },
+            { name: "Neha Gupta", batch: "2018", gender: "female" },
+            { name: "Vikram Joshi", batch: "2014", gender: "male" },
+            { name: "Ananya Reddy", batch: "2019", gender: "female" },
+            { name: "Rohan Malhotra", batch: "2016", gender: "male" },
+            { name: "Divya Iyer", batch: "2013", gender: "female" },
+            { name: "Arjun Kapoor", batch: "2011", gender: "male" },
+            { name: "Meera Nair", batch: "2020", gender: "female" },
+            { name: "Sanjay Verma", batch: "2010", gender: "male" },
+            { name: "Pooja Chatterjee", batch: "2015", gender: "female" },
+            { name: "Karan Desai", batch: "2017", gender: "male" },
+            { name: "Shreya Banerjee", batch: "2018", gender: "female" },
+            { name: "Rajiv Khanna", batch: "2014", gender: "male" },
+            { name: "Anjali Srinivasan", batch: "2019", gender: "female" },
+            { name: "Vivek Mehra", batch: "2016", gender: "male" },
+            { name: "Sunita Rao", batch: "2013", gender: "female" },
+            { name: "Deepak Chawla", batch: "2011", gender: "male" },
+            { name: "Nandini Menon", batch: "2020", gender: "female" },
+            { name: "Alok Pandey", batch: "2010", gender: "male" },
+            { name: "Ishita Ghosh", batch: "2015", gender: "female" },
+            { name: "Siddharth Bajaj", batch: "2017", gender: "male" },
+            { name: "Tanvi Kapoor", batch: "2018", gender: "female" },
+            { name: "Rishi Chopra", batch: "2014", gender: "male" },
+            { name: "Aditi Saxena", batch: "2019", gender: "female" },
+            { name: "Nikhil Agarwal", batch: "2016", gender: "male" },
+            { name: "Mona Deshpande", batch: "2013", gender: "female" },
+            { name: "Pranav Nair", batch: "2011", gender: "male" },
+            { name: "Kavita Krishnan", batch: "2020", gender: "female" },
+            { name: "Gaurav Sethi", batch: "2010", gender: "male" },
+            { name: "Radhika Oberoi", batch: "2015", gender: "female" },
+            { name: "Ankit Mehrotra", batch: "2017", gender: "male" },
+            { name: "Shivani Kapoor", batch: "2018", gender: "female" },
+            { name: "Rajat Khanna", batch: "2014", gender: "male" },
+            { name: "Preeti Choudhary", batch: "2019", gender: "female" },
+            { name: "Vishal Bajpai", batch: "2016", gender: "male" },
+            { name: "Jyoti Malhotra", batch: "2013", gender: "female" },
+            { name: "Abhishek Dutta", batch: "2011", gender: "male" },
+            { name: "Swati Mukherjee", batch: "2020", gender: "female" },
+            { name: "Varun Grover", batch: "2010", gender: "male" },
+            { name: "Ritu Sharma", batch: "2015", gender: "female" },
+            { name: "Kunal Saxena", batch: "2017", gender: "male" },
+            { name: "Anushka Reddy", batch: "2018", gender: "female" },
+            { name: "Rohit Khanna", batch: "2014", gender: "male" },
+            { name: "Pallavi Iyer", batch: "2019", gender: "female" },
+            { name: "Aditya Joshi", batch: "2016", gender: "male" },
+            { name: "Sonia Mehra", batch: "2013", gender: "female" },
+            { name: "Harsh Malhotra", batch: "2011", gender: "male" },
+            { name: "Nisha Kapoor", batch: "2020", gender: "female" }
+        ];
+
+        // Jobs Data
+        const jobsData = [
+            { title: "Software Engineer", company: "Tech Solutions Inc.", salary: "₹12-15 LPA" },
+            { title: "Data Scientist", company: "Analytics Pro", salary: "₹18-22 LPA" },
+            { title: "Product Manager", company: "Innovate Labs", salary: "₹20-25 LPA" },
+            { title: "UX Designer", company: "Creative Minds", salary: "₹10-14 LPA" },
+            { title: "DevOps Engineer", company: "Cloud Systems", salary: "₹15-18 LPA" },
+            { title: "Marketing Manager", company: "Brand Builders", salary: "₹12-16 LPA" },
+            { title: "Financial Analyst", company: "Capital Investments", salary: "₹14-17 LPA" },
+            { title: "HR Specialist", company: "People First", salary: "₹8-12 LPA" },
+            { title: "Business Analyst", company: "Strategy Partners", salary: "₹16-20 LPA" },
+            { title: "Cybersecurity Expert", company: "Secure Networks", salary: "₹20-28 LPA" }
+        ];
+
+        // Events Data
+        const eventsData = [
+            { date: "September 10, 2023", title: "Tech Symposium", location: "Virtual" },
+            { date: "October 5, 2023", title: "Campus Recruitment Drive", location: "University Campus" },
+            { date: "November 15, 2023", title: "Alumni Sports Day", location: "SR University Grounds" },
+            { date: "December 20, 2023", title: "Winter Gala", location: "Grand Ballroom, Mumbai" },
+            { date: "January 12, 2024", title: "Entrepreneurship Summit", location: "University Auditorium" },
+            { date: "February 14, 2024", title: "Batch of 2010 Reunion", location: "Taj Hotel, Delhi" },
+            { date: "March 8, 2024", title: "Women Leadership Conference", location: "Virtual" },
+            { date: "April 5, 2024", title: "Research Colloquium", location: "SR University" },
+            { date: "May 18, 2024", title: "Alumni Awards Night", location: "Leela Palace, Bangalore" },
+            { date: "June 22, 2024", title: "Summer Networking Mixer", location: "Hyatt Regency, Chennai" }
+        ];
+
+        // Stories Data
+        const storiesData = [
+            { name: "Dr. Sanjay Gupta", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80", story: "Developed a revolutionary medical device that's being used in hospitals across India." },
+            { name: "Ritu Verma", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80", story: "Founded an education startup that's helping rural children access quality learning." },
+            { name: "Amitabh Nair", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80", story: "Led his company to an IPO with a valuation of ₹5,000 crores." },
+            { name: "Shilpa Reddy", image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80", story: "Published groundbreaking research in environmental science." },
+            { name: "Vikram Malhotra", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80", story: "Won the prestigious Padma Shri award for contributions to literature." },
+            { name: "Neha Kapoor", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80", story: "Became the youngest female CEO of a Fortune 500 company." },
+            { name: "Rajiv Khanna", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80", story: "Invented a new renewable energy technology that's being adopted globally." },
+            { name: "Ananya Joshi", image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80", story: "Founded a non-profit that has helped educate over 10,000 underprivileged children." },
+            { name: "Rahul Desai", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80", story: "Developed an AI platform that's transforming healthcare diagnostics." },
+            { name: "Priyanka Sharma", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80", story: "Became the first Indian woman to lead a major international tech conference." }
+        ];
+
+        // LinkedIn Profiles Data
+        const linkedinData = [
+            { name: "Rahul Sharma", title: "Senior Software Engineer at Google", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80" },
+            { name: "Priya Patel", title: "Product Manager at Microsoft", image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80" },
+            { name: "Amit Singh", title: "Data Scientist at Amazon", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80" },
+            { name: "Neha Gupta", title: "UX Designer at Adobe", image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aW5kaWFuJTIwd29tYW58ZW58MHx8MHx8fDA%3D&w=100&q=80" },
+            { name: "Vikram Joshi", title: "CTO at Startup Inc.", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aW5kaWFuJTIwbWFufGVufDB8fDB8fHww&w=100&q=80" }
+        ];
+
+        // College Events Data
+        const collegeEventsData = [
+            { title: "Annual Tech Fest", date: "October 15-17, 2023", description: "Join us for the biggest technology festival of the year with workshops, competitions and guest speakers." },
+            { title: "Cultural Night", date: "November 25, 2023", description: "An evening of performances showcasing the diverse talents of our students and alumni." },
+            { title: "Career Fair", date: "February 8, 2024", description: "Connect with top recruiters and explore job opportunities across various industries." },
+            { title: "Alumni Homecoming", date: "March 12-14, 2024", description: "Reconnect with your batchmates and relive your college memories during this special weekend." },
+            { title: "Research Symposium", date: "April 5, 2024", description: "Showcase of cutting-edge research projects by students and faculty members." }
+        ];
+
+        // Function to generate alumni cards
+        function generateAlumniCards() {
+            alumniDirectory.innerHTML = '';
+            alumniData.forEach(alumni => {
+                const card = document.createElement('div');
+                card.className = 'alumni-card';
+                
+                const gender = alumni.gender === 'male' ? 'men' : 'women';
+                const imageUrl = `https://randomuser.me/api/portraits/${gender}/${Math.floor(Math.random() * 100)}.jpg`;
+                
+                card.innerHTML = `
+                    <div class="alumni-image">
+                        <img src="${imageUrl}" alt="${alumni.name}">
+                    </div>
+                    <h4 class="alumni-name">${alumni.name}</h4>
+                    <div class="alumni-batch">Batch of ${alumni.batch}</div>
+                    <button class="alumni-connect">Connect</button>
+                `;
+                
+                alumniDirectory.appendChild(card);
+            });
+        }
+
+        // Function to generate job listings
+        function generateJobListings() {
+            jobsList.innerHTML = '';
+            jobsData.forEach(job => {
+                const item = document.createElement('div');
+                item.className = 'job-item';
+                
+                item.innerHTML = `
+                    <h4 class="job-title">${job.title}</h4>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-salary">${job.salary}</div>
+                    <button class="job-apply">Apply Now</button>
+                `;
+                
+                jobsList.appendChild(item);
+            });
+        }
+
+        // Function to generate events list
+        function generateEventsList() {
+            eventsList.innerHTML = '';
+            eventsData.forEach(event => {
+                const item = document.createElement('div');
+                item.className = 'event-item';
+                
+                item.innerHTML = `
+                    <div class="event-date">${event.date}</div>
+                    <h4 class="event-title">${event.title}</h4>
+                    <div class="event-location">${event.location}</div>
+                `;
+                
+                eventsList.appendChild(item);
+            });
+        }
+
+        // Function to generate stories list
+        function generateStoriesList() {
+            storiesList.innerHTML = '';
+            storiesData.forEach(story => {
+                const item = document.createElement('div');
+                item.className = 'story-item';
+                
+                item.innerHTML = `
+                    <img src="${story.image}" alt="${story.name}" class="story-image">
+                    <div class="story-content">
+                        <h4>${story.name}</h4>
+                        <p>${story.story}</p>
+                    </div>
+                `;
+                
+                storiesList.appendChild(item);
+            });
+        }
+
+        // Function to generate LinkedIn profiles
+        function generateLinkedInProfiles() {
+            linkedinProfiles.innerHTML = '';
+            linkedinData.forEach(profile => {
+                const profileDiv = document.createElement('div');
+                profileDiv.className = 'linkedin-profile';
+                
+                profileDiv.innerHTML = `
+                    <img src="${profile.image}" alt="${profile.name}">
+                    <h4>${profile.name}</h4>
+                    <p>${profile.title}</p>
+                    <button class="linkedin-btn">
+                        <i class="fab fa-linkedin"></i> Connect
+                    </button>
+                `;
+                
+                linkedinProfiles.appendChild(profileDiv);
+            });
+        }
+
+        // Function to generate college events
+        function generateCollegeEvents() {
+            collegeEvents.innerHTML = '';
+            collegeEventsData.forEach(event => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'college-event';
+                
+                eventDiv.innerHTML = `
+                    <h4>${event.title}</h4>
+                    <div class="event-date">${event.date}</div>
+                    <p>${event.description}</p>
+                `;
+                
+                collegeEvents.appendChild(eventDiv);
+            });
+        }
+
+        // Event listeners for opening modals
+        alumniNetworkCard.addEventListener('click', () => {
+            generateAlumniCards();
+            alumniModal.style.display = 'flex';
+        });
+
+        alumniDirectoryLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateAlumniCards();
+            alumniModal.style.display = 'flex';
+        });
+
+        networkLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateAlumniCards();
+            alumniModal.style.display = 'flex';
+        });
+
+        mobileNetworkLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateAlumniCards();
+            alumniModal.style.display = 'flex';
+        });
+
+        jobsPostedCard.addEventListener('click', () => {
+            generateJobListings();
+            jobsModal.style.display = 'flex';
+        });
+
+        jobPortalLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateJobListings();
+            jobsModal.style.display = 'flex';
+        });
+
+        jobsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateJobListings();
+            jobsModal.style.display = 'flex';
+        });
+
+        mobileJobsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateJobListings();
+            jobsModal.style.display = 'flex';
+        });
+
+        donationsCard.addEventListener('click', () => {
+            donationModal.style.display = 'flex';
+        });
+
+        donationPortalLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            donationModal.style.display = 'flex';
+        });
+
+        donateLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            donationModal.style.display = 'flex';
+        });
+
+        donateBtn.addEventListener('click', () => {
+            donationModal.style.display = 'flex';
+        });
+
+        viewAllEvents.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateEventsList();
+            eventsModal.style.display = 'flex';
+        });
+
+        eventsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateEventsList();
+            eventsModal.style.display = 'flex';
+        });
+
+        eventsPortalLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateEventsList();
+            eventsModal.style.display = 'flex';
+        });
+
+        viewAllStories.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateStoriesList();
+            storiesModal.style.display = 'flex';
+        });
+
+        storiesLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateStoriesList();
+            storiesModal.style.display = 'flex';
+        });
+
+        storiesPortalLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateStoriesList();
+            storiesModal.style.display = 'flex';
+        });
+
+        connectBtn.addEventListener('click', () => {
+            generateLinkedInProfiles();
+            connectModal.style.display = 'flex';
+        });
+
+        postJobBtn.addEventListener('click', () => {
+            postJobModal.style.display = 'flex';
+        });
+
+        createEventBtn.addEventListener('click', () => {
+            generateCollegeEvents();
+            createEventModal.style.display = 'flex';
+        });
+
+        // Event listeners for closing modals
+        closeAlumniModal.addEventListener('click', () => {
+            alumniModal.style.display = 'none';
+        });
+
+        closeJobsModal.addEventListener('click', () => {
+            jobsModal.style.display = 'none';
+        });
+
+        closeDonationModal.addEventListener('click', () => {
+            donationModal.style.display = 'none';
+            upiDetails.style.display = 'none';
+        });
+
+        closeEventsModal.addEventListener('click', () => {
+            eventsModal.style.display = 'none';
+        });
+
+        closeStoriesModal.addEventListener('click', () => {
+            storiesModal.style.display = 'none';
+        });
+
+        closeConnectModal.addEventListener('click', () => {
+            connectModal.style.display = 'none';
+        });
+
+        closePostJobModal.addEventListener('click', () => {
+            postJobModal.style.display = 'none';
+        });
+
+        closeCreateEventModal.addEventListener('click', () => {
+            createEventModal.style.display = 'none';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === alumniModal) alumniModal.style.display = 'none';
+            if (e.target === jobsModal) jobsModal.style.display = 'none';
+            if (e.target === donationModal) {
+                donationModal.style.display = 'none';
+                upiDetails.style.display = 'none';
+            }
+            if (e.target === eventsModal) eventsModal.style.display = 'none';
+            if (e.target === storiesModal) storiesModal.style.display = 'none';
+            if (e.target === connectModal) connectModal.style.display = 'none';
+            if (e.target === postJobModal) postJobModal.style.display = 'none';
+            if (e.target === createEventModal) createEventModal.style.display = 'none';
+        });
+
+        // UPI option click handler
+        upiOption.addEventListener('click', () => {
+            upiDetails.style.display = 'block';
+        });
+
+        // Initialize data on page load
+        generateAlumniCards();
+        generateJobListings();
+        generateEventsList();
+        generateStoriesList();
+        generateLinkedInProfiles();
+        generateCollegeEvents();
+    </script>
+</body>
+</html>
